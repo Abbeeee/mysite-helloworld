@@ -6,7 +6,7 @@ import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 
 export default function home({ data }) {
   console.log(data)
-  const image = getImage(data.file)
+  const image = getImage(data.file.childImageSharp.gatsbyImageData)
   return (
       <Layout>
           <section className={styles.header}>
@@ -27,8 +27,8 @@ export const query = graphql`
     file(relativePath: {eq: "logo.png"}) {
       childImageSharp {
         gatsbyImageData(
-          layout: FULL_WIDTH
-          placeholder: BLURRED
+          layout: FULL_WIDTH,
+          placeholder: BLURRED,
           formats: [AUTO, WEBP]
         )
       }
