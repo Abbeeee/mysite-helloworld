@@ -10,7 +10,7 @@ export default function Layout({ children }) {
                 { children }
             </div>
             <footer>
-                <p>Copyright 2021 Lagerqu</p>
+                <p>Copyright © 2021 - Built with Gatsby</p>
             </footer>
         </div>
     )

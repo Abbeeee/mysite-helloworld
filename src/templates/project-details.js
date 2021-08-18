@@ -1,44 +1,60 @@
 import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
+import Project from '../components/project'
 import Layout from '../components/Layout'
-import * as styles from '../styles/project-details.module.css'
 
-export default function ProjectDetails({ data }) {
-    const { html } = data.markdownRemark
-    const { title, stack, featuredImg } = data.markdownRemark.frontmatter
-
-    return (
-        <Layout>
-            <div className={styles.details}>
-                <h2>{ title }</h2>
-                <h3>{ stack }</h3>
-                <div className={styles.featured}>
-                    <GatsbyImage image={getImage(featuredImg.childImageSharp.gatsbyImageData)} alt="featured project image" />
-                </div>
-                <div className={styles.html} dangerouslySetInnerHTML={{ __html: html }} />
-            </div>
-        </Layout>
-    )
-}
 
 export const query = graphql`
-    query ProjectDetails($slug: String) {
-      markdownRemark(frontmatter: {slug: {eq: $slug}}) {
-        html
-        frontmatter {
-          stack
+    query ProjectDetailsQuery($id: String!) {
+      project: sanityProject(id: { eq: $id }) {
+        id
+        publishedAt
+        title
+        slug {
+          current
+        }
+        categories {
+          _id
           title
-          featuredImg {
-            childImageSharp {
-                gatsbyImageData(
-                    layout: FULL_WIDTH,
-                    placeholder: BLURRED,
-                    formats: AUTO
-                )
-            }
+        }
+        mainImage {
+          crop {
+            _key
+            _type
+            top
+            bottom
+            left
+            right
+          }
+          hotspot {
+            _key
+            _type
+            x
+            y
+            height
+            width
+          }
+          asset {
+            _id
           }
         }
+        _rawBody(resolveReferences: {maxDepth: 10})
       }
     }
 `
+
+const ProjectDetails = props => {
+  const { data } = props
+  const project = data && data.project
+
+  return (
+    <Layout>
+      {project && <h1>{ project.title || 'Untitled' }</h1>}
+
+      {project && <Project {...project} />}
+    </Layout>
+  )
+}
+
+export default ProjectDetails

@@ -2,22 +2,32 @@ import { graphql, Link } from 'gatsby'
 import React from 'react'
 import Layout from '../components/Layout'
 import * as styles from '../styles/home.module.css'
+import * as projectStyles from '../styles/projects.module.css'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 
 export default function home({ data }) {
-  console.log(data)
-  const image = getImage(data.file.childImageSharp.gatsbyImageData)
+  const projects = data.projects.nodes
+  const contact = data.contact.siteMetadata.contact
+ 
+  
   return (
       <Layout>
-          <section className={styles.header}>
-            <div>
-              <h2>Welcome to my portfolio</h2>
-              <h3>Design & Development</h3>
-              <p>My name is Albin Lagerquist & I am cool.</p>
+          <section className={styles.hero}>
+              <h1>Design & Development</h1>
+              <p>My name is Albin, feel free to welcome me at { contact }<br></br>Have a look at my projects ↓</p>
               <Link className={styles.btn} to="/projects">My Projects</Link>
-            </div>
-            <GatsbyImage image={image} alt="Logo" />
           </section>
+          <div className={projectStyles.projectsGrid}>
+              {projects.map(project => (
+                  <Link to={"/projects/" + project.frontmatter.slug} key={project.id}>
+                      <div>
+                          <GatsbyImage image={getImage(project.frontmatter.thumb.childImageSharp.gatsbyImageData)} alt="Logo" />
+                          <h3>{ project.frontmatter.title }</h3>
+                          <p>{ project.frontmatter.stack }</p>
+                      </div>
+                  </Link>
+              ))}
+          </div>
       </Layout>
   )
 }
@@ -33,5 +43,29 @@ export const query = graphql`
         )
       }
     }
+    projects: allMarkdownRemark(sort: {fields: frontmatter___date, order: DESC}) {
+        nodes {
+          frontmatter {
+            slug
+            stack
+            title
+            thumb {
+              childImageSharp {
+                gatsbyImageData(
+                    layout: FULL_WIDTH,
+                    placeholder: BLURRED,
+                    formats: [AUTO, WEBP]
+                )
+              }
+            }
+          }
+          id
+        }
+      }
+      contact: site {
+        siteMetadata {
+          contact
+        }
+      }
   }
 `

@@ -5,26 +5,24 @@ import * as styles from '../../styles/projects.module.css'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 
 export default function projects({ data }) {
-    console.log(data)
-    const projects = data.projects.nodes
-    const contact = data.contact.siteMetadata.contact
-    
+  
+    const projects = data.allSanityProject.nodes
+
     return (
         <Layout>
-            <div className={styles.portfolio}>
-                <h1>Projects Page</h1>
-                <div className={styles.projects}>
+            <div className={styles.projects}>
+                <h1>Projects</h1>
+                <div className={styles.projectsGrid}>
                     {projects.map(project => (
-                        <Link to={"/projects/" + project.frontmatter.slug} key={project.id}>
-                            <div>
-                                <GatsbyImage image={getImage(project.frontmatter.thumb.childImageSharp.gatsbyImageData)} alt="Logo" />
-                                <h3>{ project.frontmatter.title }</h3>
-                                <p>{ project.frontmatter.stack }</p>
-                            </div>
+                      <div className={styles.gridItem} key={project.id}>
+                        <Link to={`/project/${project.slug.current}`}>
+                                <GatsbyImage image={getImage(project.mainImage.asset.gatsbyImageData)} alt="Logo" />
+                                <h3>{ project.title }</h3>
+                                <p>{ project.categories.title }</p>
                         </Link>
+                      </div>
                     ))}
                 </div>
-                <p>Like what you see? Hit me up at: { contact }</p>
             </div>
         </Layout>
     )
@@ -33,28 +31,25 @@ export default function projects({ data }) {
 // export page query
 export const query = graphql`
     query ProjectsPage {
-      projects: allMarkdownRemark(sort: {fields: frontmatter___date, order: DESC}) {
+      allSanityProject {
         nodes {
-          frontmatter {
-            slug
-            stack
+          id
+          title
+          slug {
+            current
+          }
+          categories {
             title
-            thumb {
-              childImageSharp {
-                gatsbyImageData(
-                    layout: FULL_WIDTH,
-                    placeholder: BLURRED,
-                    formats: [AUTO, WEBP]
-                )
-              }
+          }
+          mainImage {
+            asset {
+              gatsbyImageData(
+                layout: FULL_WIDTH,
+                placeholder: BLURRED,
+                formats: [AUTO, WEBP]
+              )
             }
           }
-          id
-        }
-      }
-      contact: site {
-        siteMetadata {
-          contact
         }
       }
     }
