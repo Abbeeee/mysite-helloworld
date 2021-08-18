@@ -5,8 +5,6 @@ import { buildImageObj } from '../library/helpers'
 import { imageUrlFor } from '../library/image-url'
 import * as styles from '../styles/project.module.css'
 
-import ReactDOM from "react-dom";   // NEW STUFF FROM HERE
-import doc from "../doc.json";
 import PortableText from '@sanity/block-content-to-react';
 import urlBuilder from '@sanity/image-url';
 

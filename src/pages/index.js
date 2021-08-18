@@ -17,17 +17,6 @@ export default function home({ data }) {
               <p>My name is Albin, feel free to welcome me at { contact }<br></br>Have a look at my projects ↓</p>
               <Link className={styles.btn} to="/projects">My Projects</Link>
           </section>
-          <div className={projectStyles.projectsGrid}>
-              {projects.map(project => (
-                  <Link to={"/projects/" + project.frontmatter.slug} key={project.id}>
-                      <div>
-                          <GatsbyImage image={getImage(project.frontmatter.thumb.childImageSharp.gatsbyImageData)} alt="Logo" />
-                          <h3>{ project.frontmatter.title }</h3>
-                          <p>{ project.frontmatter.stack }</p>
-                      </div>
-                  </Link>
-              ))}
-          </div>
       </Layout>
   )
 }
